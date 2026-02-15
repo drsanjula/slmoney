@@ -27,3 +27,15 @@ interface AccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(account: AccountEntity): Long
 }
+
+@Dao
+interface RecurringTransactionDao {
+    @Query("SELECT * FROM recurring_transactions")
+    fun getAll(): Flow<List<RecurringTransactionEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(recurring: RecurringTransactionEntity): Long
+
+    @Query("SELECT * FROM recurring_transactions WHERE merchantName = :merchant LIMIT 1")
+    suspend fun findByMerchant(merchant: String): RecurringTransactionEntity?
+}

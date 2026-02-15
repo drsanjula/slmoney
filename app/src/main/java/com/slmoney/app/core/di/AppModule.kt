@@ -31,4 +31,7 @@ object AppModule {
 
     @Provides
     fun provideAccountDao(db: SLMoneyDatabase): AccountDao = db.accountDao()
+
+    @Provides
+    fun provideRecurringTransactionDao(db: SLMoneyDatabase): com.slmoney.app.data.local.db.dao.RecurringTransactionDao = db.recurringTransactionDao()
 }

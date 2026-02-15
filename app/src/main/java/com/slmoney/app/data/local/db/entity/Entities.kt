@@ -43,3 +43,15 @@ data class CategoryEntity(
     val isDefault: Boolean,
     val parentId: Long?
 )
+
+@Entity(tableName = "recurring_transactions")
+data class RecurringTransactionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val merchantName: String,
+    val amount: Double,
+    val frequency: String,             // "MONTHLY", "WEEKLY", "DAILY"
+    val lastAppliedDateMillis: Long,
+    val nextExpectedDateMillis: Long,
+    val categoryId: Long?,
+    val isActive: Boolean = true
+)

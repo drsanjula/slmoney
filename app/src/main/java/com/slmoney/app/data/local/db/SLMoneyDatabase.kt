@@ -8,7 +8,8 @@ import com.slmoney.app.data.local.db.entity.*
     entities = [
         TransactionEntity::class,
         AccountEntity::class,
-        CategoryEntity::class
+        CategoryEntity::class,
+        RecurringTransactionEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -16,4 +17,5 @@ import com.slmoney.app.data.local.db.entity.*
 abstract class SLMoneyDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun accountDao(): AccountDao
+    abstract fun recurringTransactionDao(): RecurringTransactionDao
 }
