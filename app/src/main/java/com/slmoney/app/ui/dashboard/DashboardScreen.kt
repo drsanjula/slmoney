@@ -1,5 +1,6 @@
 package com.slmoney.app.ui.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val transactions by viewModel.recentTransactions.collectAsState()
+    val summary by viewModel.spendingSummary.collectAsState()
 
     Scaffold(
         topBar = {
@@ -65,8 +67,15 @@ fun DashboardScreen(
                             currentBalance = 15500.20,
                             lastUpdated = null
                         )
-                    ),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                )
+            }
+
+            item {
+                SpendingSummaryCard(
+                    income = summary.income,
+                    expense = summary.expense,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
@@ -97,6 +106,63 @@ fun DashboardScreen(
                 items(transactions) { transaction ->
                     TransactionCard(transaction = transaction)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun SpendingSummaryCard(
+    income: Double,
+    expense: Double,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f)
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Total Spent",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+                )
+                Text(
+                    text = "Rs. ${"%,.2f".format(expense)}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .width(1.dp)
+                    .height(40.dp)
+                    .background(MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.2f))
+            )
+
+            Column(horizontalAlignment = androidx.compose.ui.Alignment.End) {
+                Text(
+                    text = "Total Income",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+                )
+                Text(
+                    text = "Rs. ${"%,.2f".format(income)}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = androidx.compose.ui.graphics.Color(0xFF4CAF50)
+                )
             }
         }
     }
