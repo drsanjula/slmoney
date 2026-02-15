@@ -2,6 +2,7 @@ package com.slmoney.app.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material3.*
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.slmoney.app.ui.analytics.AnalyticsScreen
+import com.slmoney.app.ui.calendar.BillCalendarScreen
 import com.slmoney.app.ui.dashboard.DashboardScreen
 
 @Composable
@@ -26,6 +28,7 @@ fun MainNavHost(
             DashboardScreen(onAddClick = { navController.navigate("manual_entry") }) 
         }
         composable("analytics") { AnalyticsScreen() }
+        composable("calendar") { BillCalendarScreen() }
         composable("manual_entry") { 
             com.slmoney.app.ui.entry.ManualEntryScreen(onBack = { navController.popBackStack() }) 
         }
@@ -52,6 +55,12 @@ fun MainScreen() {
                     label = { Text("Insights") },
                     selected = currentRoute == "analytics",
                     onClick = { navController.navigate("analytics") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.CalendarMonth, contentDescription = null) },
+                    label = { Text("Bills") },
+                    selected = currentRoute == "calendar",
+                    onClick = { navController.navigate("calendar") }
                 )
             }
         }
