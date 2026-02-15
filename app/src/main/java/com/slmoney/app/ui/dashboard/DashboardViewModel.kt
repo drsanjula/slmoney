@@ -6,8 +6,11 @@ import com.slmoney.app.data.repository.TransactionRepositoryImpl
 import com.slmoney.app.domain.model.Transaction
 import com.slmoney.app.domain.model.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -18,13 +21,28 @@ class DashboardViewModel @Inject constructor(
     private val healthUseCase: com.slmoney.app.domain.usecase.CalculateFinancialHealthUseCase
 ) : ViewModel() {
 
-    val recentTransactions: StateFlow<List<Transaction>> = transactionRepository
-        .getAllTransactions()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
+    fun onSearchQueryChange(query: String) {
+        _searchQuery.value = query
+    }
+
+    val recentTransactions: StateFlow<List<Transaction>> = kotlinx.coroutines.flow.combine(
+        transactionRepository.getAllTransactions(),
+        _searchQuery
+    ) { transactions, query ->
+        if (query.isBlank()) transactions
+        else transactions.filter { 
+            it.merchantName?.contains(query, ignoreCase = true) == true ||
+            it.description.contains(query, ignoreCase = true)
+        }
+    }
+    .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     val spendingSummary: StateFlow<SpendingSummaryState> = transactionRepository
         .getAllTransactions()

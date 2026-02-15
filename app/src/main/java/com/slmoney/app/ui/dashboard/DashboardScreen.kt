@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -85,6 +86,20 @@ fun DashboardScreen(
                     text = "Recent Transactions",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                )
+            }
+
+            item {
+                OutlinedTextField(
+                    value = viewModel.searchQuery.collectAsState().value,
+                    onValueChange = viewModel::onSearchQueryChange,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    placeholder = { Text("Search transactions...") },
+                    leadingIcon = { Icon(androidx.compose.material.icons.Icons.Default.Search, contentDescription = null) },
+                    shape = MaterialTheme.shapes.medium,
+                    singleLine = true
                 )
             }
 
