@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val transactionRepository: TransactionRepositoryImpl
+    private val transactionRepository: TransactionRepositoryImpl,
+    private val healthUseCase: com.slmoney.app.domain.usecase.CalculateFinancialHealthUseCase
 ) : ViewModel() {
 
     val recentTransactions: StateFlow<List<Transaction>> = transactionRepository
@@ -30,7 +31,8 @@ class DashboardViewModel @Inject constructor(
         .map { transactions ->
             val income = transactions.filter { it.type == TransactionType.CREDIT }.sumOf { it.amount }
             val expense = transactions.filter { it.type == TransactionType.DEBIT }.sumOf { it.amount }
-            SpendingSummaryState(income, expense)
+            val healthScore = healthUseCase(transactions)
+            SpendingSummaryState(income, expense, healthScore = healthScore)
         }
         .stateIn(
             scope = viewModelScope,
@@ -42,5 +44,6 @@ class DashboardViewModel @Inject constructor(
 data class SpendingSummaryState(
     val income: Double = 0.0,
     val expense: Double = 0.0,
-    val balance: Double = income - expense
+    val balance: Double = income - expense,
+    val healthScore: Int = 0
 )
