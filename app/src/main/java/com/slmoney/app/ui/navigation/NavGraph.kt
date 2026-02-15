@@ -13,6 +13,11 @@ import androidx.navigation.compose.*
 import com.slmoney.app.ui.analytics.AnalyticsScreen
 import com.slmoney.app.ui.calendar.BillCalendarScreen
 import com.slmoney.app.ui.dashboard.DashboardScreen
+import com.slmoney.app.ui.settings.SettingsScreen
+import com.slmoney.app.core.preferences.SettingsManager
+import javax.inject.Inject
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun MainNavHost(
@@ -25,10 +30,20 @@ fun MainNavHost(
         modifier = modifier
     ) {
         composable("dashboard") { 
-            DashboardScreen(onAddClick = { navController.navigate("manual_entry") }) 
+            DashboardScreen(
+                onAddClick = { navController.navigate("manual_entry") },
+                onSettingsClick = { navController.navigate("settings") }
+            ) 
         }
         composable("analytics") { AnalyticsScreen() }
         composable("calendar") { BillCalendarScreen() }
+        composable("settings") { 
+            // Better to use a ViewModel here, but for brevity using direct injection check
+            val settingsManager = hiltViewModel<com.slmoney.app.ui.dashboard.DashboardViewModel>().run { 
+                // We'll need to provide it via ViewModel or local inject
+            }
+            SettingsScreen(onBack = { navController.popBackStack() }, settingsManager = hiltViewModel<com.slmoney.app.ui.dashboard.SettingsViewModel>().settingsManager)
+        }
         composable("manual_entry") { 
             com.slmoney.app.ui.entry.ManualEntryScreen(onBack = { navController.popBackStack() }) 
         }

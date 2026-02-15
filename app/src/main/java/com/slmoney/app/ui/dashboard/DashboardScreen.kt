@@ -1,6 +1,7 @@
 package com.slmoney.app.ui.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,7 @@ import com.slmoney.app.ui.components.TransactionCard
 @Composable
 fun DashboardScreen(
     onAddClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val transactions by viewModel.recentTransactions.collectAsState()
@@ -28,7 +30,12 @@ fun DashboardScreen(
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                title = { Text("SL Money") }
+                title = { Text("SL Money") },
+                actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    }
+                }
             )
         },
         floatingActionButton = {
