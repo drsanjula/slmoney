@@ -18,4 +18,5 @@ abstract class SLMoneyDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun accountDao(): AccountDao
     abstract fun recurringTransactionDao(): RecurringTransactionDao
+    abstract fun categoryDao(): CategoryDao
 }
