@@ -9,7 +9,9 @@ class BankPatternRegistry @Inject constructor() {
     private val patterns = listOf(
         ComBankPattern(),
         BocPattern(),
-        SampathPattern()
+        SampathPattern(),
+        HnbPattern(),
+        PeoplesBankPattern()
     )
 
     fun findPattern(sender: String): BankPattern? {
