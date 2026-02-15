@@ -15,6 +15,13 @@ class TransactionNotificationListener : NotificationListenerService() {
     @Inject
     lateinit var parseSmsUseCase: com.slmoney.app.domain.usecase.ParseSmsUseCase
 
+    private val bankPackages = setOf(
+        "com.combank.digital",
+        "com.sampath.mobilesbanking",
+        "com.hnb.digital",
+        "com.boc.digital"
+    )
+
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val packageName = sbn.packageName
         if (packageName !in bankPackages) return
