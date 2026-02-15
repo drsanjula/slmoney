@@ -17,6 +17,7 @@ import com.slmoney.app.ui.components.TransactionCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
+    onAddClick: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val transactions by viewModel.recentTransactions.collectAsState()
@@ -29,7 +30,7 @@ fun DashboardScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO: Manual Entry */ },
+                onClick = onAddClick,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 shape = MaterialTheme.shapes.large

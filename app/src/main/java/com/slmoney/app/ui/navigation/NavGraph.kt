@@ -22,8 +22,13 @@ fun MainNavHost(
         startDestination = "dashboard",
         modifier = modifier
     ) {
-        composable("dashboard") { DashboardScreen() }
+        composable("dashboard") { 
+            DashboardScreen(onAddClick = { navController.navigate("manual_entry") }) 
+        }
         composable("analytics") { AnalyticsScreen() }
+        composable("manual_entry") { 
+            com.slmoney.app.ui.entry.ManualEntryScreen(onBack = { navController.popBackStack() }) 
+        }
     }
 }
 
