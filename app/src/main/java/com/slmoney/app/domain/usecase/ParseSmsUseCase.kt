@@ -9,7 +9,8 @@ import javax.inject.Inject
 class ParseSmsUseCase @Inject constructor(
     private val parser: SmsParserEngine,
     private val repository: TransactionRepositoryImpl,
-    private val categorizer: TransactionCategorizer
+    private val categorizer: TransactionCategorizer,
+    private val detectRecurringUseCase: DetectRecurringUseCase
 ) {
     suspend operator fun invoke(sender: String, body: String, timestamp: Long): Transaction? {
         val parsed = parser.parse(sender, body, timestamp) ?: return null
@@ -37,10 +38,11 @@ class ParseSmsUseCase @Inject constructor(
             smsSender = sender
         )
         
-        // Auto-categorize (stub for now, will link to category DB later)
-        val categoryName = categorizer.categorize(parsed.merchantName)
-        
         repository.insertTransaction(transaction)
+        
+        // Detect recurring
+        detectRecurringUseCase(transaction)
+        
         return transaction
     }
 }
